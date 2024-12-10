@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee List</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Employee List</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Salary</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="employee : ${employees}">
+                    <td th:text="${employee.name}"></td>
+                    <td th:text="${employee.email}"></td>
+                    <td th:text="${employee.department}"></td>
+                    <td th:text="${employee.salary}"></td>
+                    <td>
+                        <a href="/employees/edit/{employee.id}" class="btn">Edit</a>
+                        <a href="/employees/delete/{employee.id}" class="btn">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a href="/employees/new" class="btn">Add New Employee</a>
+    </div>
+</body>
+</html>
