@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head(${pageTitle})}"></head>
+<body class="app-body">
+
+<div class="app-shell">
+  <th:block th:replace="~{fragments/layout :: sidebar('employees')}"></th:block>
+
+  <div class="main-content">
+    <th:block th:replace="~{fragments/layout :: topbar(${pageTitle})}"></th:block>
+
+    <main class="content-area">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="page-header-left">
+          <h2 class="page-header-title" th:text="${formTitle}">Add New Employee</h2>
+          <p class="page-header-subtitle">Fill in the details below to save the employee record.</p>
+        </div>
+        <div class="page-header-actions">
+          <a th:href="@{/employees}" class="btn btn-ghost">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15,18 9,12 15,6"/>
+            </svg>
+            Back to List
+          </a>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <form th:action="@{/employees/save}" method="post" th:object="${employee}" novalidate>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <input type="hidden" th:field="*{id}">
+
+        <!-- Personal Information -->
+        <div class="form-section">
+          <div class="form-section-title">Personal Information</div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="name">
+                Full Name <span class="required">*</span>
+              </label>
+              <input id="name" type="text" th:field="*{name}"
+                     class="form-control"
+                     th:classappend="${#fields.hasErrors('name')} ? ' is-invalid' : ''"
+                     placeholder="e.g. Alice Johnson"
+                     autocomplete="name">
+              <div class="field-error" th:if="${#fields.hasErrors('name')}">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
+                <span th:errors="*{name}"></span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="email">
+                Email Address <span class="required">*</span>
+              </label>
+              <input id="email" type="email" th:field="*{email}"
+                     class="form-control"
+                     th:classappend="${#fields.hasErrors('email')} ? ' is-invalid' : ''"
+                     placeholder="e.g. alice@company.com"
+                     autocomplete="email">
+              <div class="field-error" th:if="${#fields.hasErrors('email')}">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
+                <span th:errors="*{email}"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="phone">Phone Number</label>
+              <input id="phone" type="tel" th:field="*{phone}"
+                     class="form-control"
+                     th:classappend="${#fields.hasErrors('phone')} ? ' is-invalid' : ''"
+                     placeholder="e.g. +1 555-0123"
+                     autocomplete="tel">
+              <div class="field-error" th:if="${#fields.hasErrors('phone')}">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
+                <span th:errors="*{phone}"></span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="jobTitle">Job Title</label>
+              <input id="jobTitle" type="text" th:field="*{jobTitle}"
+                     class="form-control"
+                     th:classappend="${#fields.hasErrors('jobTitle')} ? ' is-invalid' : ''"
+                     placeholder="e.g. Senior Engineer">
+              <div class="field-error" th:if="${#fields.hasErrors('jobTitle')}">
+                <span th:errors="*{jobTitle}"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Employment Details -->
+        <div class="form-section">
+          <div class="form-section-title">Employment Details</div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="departmentId">Department</label>
+              <select id="departmentId" name="departmentId" class="form-control">
+                <option value="">— No Department —</option>
+                <option th:each="dept : ${departments}"
+                        th:value="${dept.id}"
+                        th:text="${dept.name}"
+                        th:selected="${employee.department != null and employee.department.id == dept.id}">
+                  Engineering
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="hireDate">Hire Date</label>
+              <input id="hireDate" type="date" th:field="*{hireDate}"
+                     class="form-control"
+                     th:classappend="${#fields.hasErrors('hireDate')} ? ' is-invalid' : ''">
+              <div class="field-error" th:if="${#fields.hasErrors('hireDate')}">
+                <span th:errors="*{hireDate}"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="salary">Salary (USD)</label>
+              <div class="form-control-prefix-wrap">
+                <span class="form-control-prefix">$</span>
+                <input id="salary" type="number" th:field="*{salary}"
+                       class="form-control"
+                       th:classappend="${#fields.hasErrors('salary')} ? ' is-invalid' : ''"
+                       placeholder="85000" min="0" step="1000">
+              </div>
+              <div class="field-error" th:if="${#fields.hasErrors('salary')}">
+                <span th:errors="*{salary}"></span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <div class="status-toggle">
+                <input class="status-radio" type="radio" id="statusActive"
+                       th:field="*{status}" value="ACTIVE">
+                <label class="status-label" for="statusActive">● Active</label>
+
+                <input class="status-radio" type="radio" id="statusInactive"
+                       th:field="*{status}" value="INACTIVE">
+                <label class="status-label" for="statusInactive">● Inactive</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <a th:href="@{/employees}" class="btn btn-ghost">Cancel</a>
+          <button type="submit" class="btn btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20,6 9,17 4,12"/>
+            </svg>
+            <span th:text="${isEdit} ? 'Update Employee' : 'Save Employee'">Save Employee</span>
+          </button>
+        </div>
+
+      </form>
+
+    </main>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast-container" class="toast-container"></div>
+<div id="toast-data"
+     th:data-success="${successMessage}"
+     th:data-error="${errorMessage}"></div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

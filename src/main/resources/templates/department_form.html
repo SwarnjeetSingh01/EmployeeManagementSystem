@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head(${pageTitle})}"></head>
+<body class="app-body">
+
+<div class="app-shell">
+  <th:block th:replace="~{fragments/layout :: sidebar('departments')}"></th:block>
+
+  <div class="main-content">
+    <th:block th:replace="~{fragments/layout :: topbar(${pageTitle})}"></th:block>
+
+    <main class="content-area">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="page-header-left">
+          <h2 class="page-header-title" th:text="${formTitle}">Add Department</h2>
+          <p class="page-header-subtitle">Fill in the details below.</p>
+        </div>
+        <div class="page-header-actions">
+          <a th:href="@{/departments}" class="btn btn-ghost">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15,18 9,12 15,6"/>
+            </svg>
+            Back to Departments
+          </a>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div style="max-width:640px;">
+        <form th:action="@{/departments/save}" method="post" th:object="${department}" novalidate>
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+          <input type="hidden" th:field="*{id}">
+
+          <div class="form-section">
+            <div class="form-section-title">Department Details</div>
+
+            <div class="form-row-full form-row">
+              <div class="form-group">
+                <label class="form-label" for="name">
+                  Department Name <span class="required">*</span>
+                </label>
+                <input id="name" type="text" th:field="*{name}"
+                       class="form-control"
+                       th:classappend="${#fields.hasErrors('name')} ? ' is-invalid' : ''"
+                       placeholder="e.g. Engineering">
+                <div class="field-error" th:if="${#fields.hasErrors('name')}">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                  <span th:errors="*{name}"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row-full form-row">
+              <div class="form-group">
+                <label class="form-label" for="description">Description</label>
+                <input id="description" type="text" th:field="*{description}"
+                       class="form-control"
+                       placeholder="Brief description of this department's role">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a th:href="@{/departments}" class="btn btn-ghost">Cancel</a>
+            <button type="submit" class="btn btn-primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20,6 9,17 4,12"/>
+              </svg>
+              <span th:text="${isEdit} ? 'Update Department' : 'Save Department'">Save Department</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast-container" class="toast-container"></div>
+<div id="toast-data"
+     th:data-success="${successMessage}"
+     th:data-error="${errorMessage}"></div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
