@@ -52,7 +52,7 @@ A robust, multi-tenant Employee Management System built with **Spring Boot** and
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/EmployeeManagementSystem.git
+   git clone https://github.com/SwarnjeetSingh01/EmployeeManagementSystem.git
    cd EmployeeManagementSystem
    ```
 
