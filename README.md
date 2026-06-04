@@ -88,6 +88,7 @@ The `DataInitializer` sets up the following accounts out-of-the-box for testing:
 | **HR Manager** | `hr@acme.com` | `password` | Acme Corp HR admin. |
 | **Standard Employee** | `charlie@acme.com` | `password` | Acme Corp developer. |
 
+⚠️ These are demo credentials for local testing only. Do not use in production.
 ---
 
 ## 📝 License
